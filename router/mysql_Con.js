@@ -13,4 +13,3 @@ const mysql_Con = (callback)=>{
 }
 
 module.exports = mysql_Con
-// mysql_Con.connect()

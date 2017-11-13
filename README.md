@@ -14,14 +14,25 @@
 若存在则返回对应的请求文件，文件可能是各种类型的，自己处理的话会很麻烦，这时候可以使用mime的`mime.getType(source_path)`方法轻松得到文件类型
 
 #### 数据请求
-数据请求的方式有两种：GET，POST。需要针对不同的请求方式，封装对应的模块
-###### GET
+数据请求的方式有两种：GET，POST。需要针对不同的请求方式，封装对应的模块，入口文件为api.js；这里同样也有404的情况，需要考虑进去。登陆和注册都需要解析前端发送来的数据和连接数据，可以把解析数据和连接数据库的操作各自单独封装成一个模块，分别是项目中的getData.js和mysql_Con.js
+需要注意的是封装连接数据库模块时需要采用回调函数的方式实现异步操作，因为从数据库读取数据需要一定的时间，否则的话前端接收不到响应值
+```
+// 连接数据库模块
+const mysql = require('mysql')
 
-##### POST
+const mysql_Con = (callback)=>{
+    let con = mysql.createConnection({
+        host: 'localhost',//mysql服务的域名
+        user: 'root',//mysql服务的用户名
+        password: '*******',//mysql服务的密码
+        database: 'village'//需要操作的database
+    })
+    con.connect()
+    callback(con)
+}
 
+module.exports = mysql_Con
+```
 
-> 用到的第三方模块：
-> 1. mime
-> 处理资源的`Content-Type`，根据请求的资源，得到对应的`Content-Type`
-> 2. mysql
-> 用于连接和操作mysql数据库
+## 总结
+通过这个小项目，总算是跨入了node.js的门，虽然只是一小步，但还是学到了很多东西，语言等工具倒没什么，主要是思想，对前后端的交互有了大体的思路，很有纪念意义。
